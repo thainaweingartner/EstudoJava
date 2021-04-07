@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
 
@@ -88,10 +89,10 @@ public class UserRepository {
         }
     }
 
-    public static ArrayList<User> findAll(User user){
+    public static List<User> findAll(){
         String sql = "SELECT user_id, user_name, user_password, user_role FROM user";
         Connection connection = ConnectionFactory.getConnection();
-        ArrayList userList = new ArrayList();
+        List<User> userList = new ArrayList<>();
 
         try {
             PreparedStatement pst = connection.prepareStatement(sql);
