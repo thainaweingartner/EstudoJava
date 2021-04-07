@@ -37,5 +37,18 @@ public class ConnectionFactory {
             e.printStackTrace();
         }
     }
+
+    public static void close(Connection connection, PreparedStatement pst, ResultSet rs) {
+        close(connection, pst);
+
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException var4) {
+            var4.printStackTrace();
+        }
+
+    }
 }
 

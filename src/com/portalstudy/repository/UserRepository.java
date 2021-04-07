@@ -5,8 +5,9 @@ import com.portalstudy.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 
 public class UserRepository {
 
@@ -58,6 +59,53 @@ public class UserRepository {
 
         } catch (SQLException e){
             e.printStackTrace();
+        }
+    }
+
+    public static void delete(User user){
+        if (user == null || user.getUser_id() == null){
+            System.out.println("User not found");
+            return;
+        }
+        String sql = "DELETE FROM user WHERE (user_id = ?)";
+
+        Connection connection = ConnectionFactory.getConnection();
+
+        try {
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setString(1, String.valueOf(user.getUser_id()));
+
+            int executedSuccessfully = pst.executeUpdate();
+            ConnectionFactory.close(connection, pst);
+
+            if (executedSuccessfully > 0) {
+                System.out.println("Deleted User: "+ user.getUser_name());
+                System.out.println(executedSuccessfully);
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<User> findAll(User user){
+        String sql = "SELECT user_id, user_name, user_password, user_role FROM user";
+        Connection connection = ConnectionFactory.getConnection();
+        ArrayList userList = new ArrayList();
+
+        try {
+            PreparedStatement pst = connection.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            while(rs.next()) {
+                userList.add(new User(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+            }
+
+            ConnectionFactory.close(connection, pst, rs);
+            return userList;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
         }
     }
 }
